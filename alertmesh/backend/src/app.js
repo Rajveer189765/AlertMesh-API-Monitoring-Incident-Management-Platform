@@ -1,6 +1,6 @@
 const express = require("express");
 const cors = require("cors");
-
+const pool = require("./config/db");
 const app = express();
 
 app.use(cors());
@@ -11,6 +11,25 @@ app.get("/api/health", (req, res) => {
         success: true,
         message: "AlertMesh API is running"
     });
+});
+
+app.get("/api/health/db", async (req, res) => {
+    try {
+        const result = await pool.query("SELECT NOW()");
+
+        res.json({
+            success: true,
+            message: "Database connection successful",
+            time: result.rows[0].now
+        });
+    } catch (error) {
+        console.error("Database connection failed:", error);
+
+        res.status(500).json({
+            success: false,
+            message: "Database connection failed"
+        });
+    }
 });
 
 module.exports = app;
