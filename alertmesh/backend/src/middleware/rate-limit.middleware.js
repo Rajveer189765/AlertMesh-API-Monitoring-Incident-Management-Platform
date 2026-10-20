@@ -43,9 +43,22 @@ const logoutLimiter = rateLimit({
     message: rateLimitResponse
 });
 
+// Account-based login protection.
+// Uses the normalized email produced by validateLogin middleware.
+const accountLoginLimiter = rateLimit({
+    windowMs: 60 * 1000,
+    limit: 10,
+    keyGenerator: (req) => `account:${req.validatedLogin.email}`,
+    standardHeaders: "draft-8",
+    legacyHeaders: false,
+    message: rateLimitResponse,
+    skip: (req) => !req.validatedLogin?.email
+});
+
 module.exports = {
     loginLimiter,
     registerLimiter,
     refreshLimiter,
-    logoutLimiter
+    logoutLimiter,
+    accountLoginLimiter
 };
