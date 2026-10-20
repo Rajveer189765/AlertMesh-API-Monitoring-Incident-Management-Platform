@@ -3,6 +3,10 @@ const bcrypt = require("bcrypt");
 const pool = require("../config/db");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
+//SHA-256 is a cryptographic hash function that converts input data into a fixed-length 256-bit (32-byte) hash. Its hexadecimal representation contains 64 characters. our authentication service uses SHA-256 for refresh tokens, not for user passwords.
+// bcrypt.hash() → protects user passwords in the database.
+// crypto.createHash("sha256") → protects refresh tokens stored in auth_sessions.
+// jwt.sign() → creates access tokens that your authentication middleware verifies.
 
 const registerUser = async ({ name, email, password }) => {
     const existingUser = await pool.query(
