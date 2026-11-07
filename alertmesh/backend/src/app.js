@@ -4,7 +4,7 @@ const pool = require("./config/db");
 const app = express();
 const authRoutes = require("./routes/auth.routes");
 const cookieParser = require("cookie-parser");
-
+const monitorRoutes = require("./routes/monitor.routes");
 app.use(cors({
     origin: "http://localhost:5173",
     credentials: true
@@ -14,6 +14,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use("/api/auth", authRoutes);
+app.use("/api/monitors", monitorRoutes);
 
 app.get("/api/health", (req, res) => {
     res.json({
@@ -40,5 +41,6 @@ app.get("/api/health/db", async (req, res) => {
         });
     }
 });
+
 
 module.exports = app;
